@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -150,9 +151,20 @@ public class GameManager : MonoBehaviour
 
     private static void showApplovin()
     {
-        AppLovin.SetSdkKey("YOUR-SDK-KEY");
+        string sdkKey = LoadAppLovinSdkKey();
+        AppLovin.SetSdkKey(sdkKey);
         AppLovin.InitializeSdk();
         AppLovin.PreloadInterstitial();
         AppLovin.ShowInterstitial();
+    }
+
+    private static string LoadAppLovinSdkKey()
+    {
+        string path = Path.Combine(Application.dataPath, "Config/applovin_sdk_key.txt");
+        if (File.Exists(path))
+        {
+            return File.ReadAllText(path).Trim();
+        }
+        return string.Empty;
     }
 }
